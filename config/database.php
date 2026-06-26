@@ -3,10 +3,18 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
-define('SITE_URL', 'http://localhost:8000');
+define('SITE_URL', 'https://jewelry-store-production.up.railway.app');
 define('SITE_NAME', 'Jewelry Store | متجر المجوهرات');
 
-$dbPath = __DIR__ . '/../database/jewelry.db';
+// Railway provides config via env vars; use SQLite by default
+$dbPath = getenv('RAILWAY_VOLUME_PATH')
+    ? rtrim(getenv('RAILWAY_VOLUME_PATH'), '/') . '/database/jewelry.db'
+    : __DIR__ . '/../database/jewelry.db';
+
+$dbDir = dirname($dbPath);
+if (!is_dir($dbDir)) {
+    mkdir($dbDir, 0755, true);
+}
 
 try {
     $pdo = new PDO("sqlite:$dbPath");

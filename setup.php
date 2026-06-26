@@ -8,10 +8,15 @@ $schemaPath = __DIR__ . '/database/schema.sqlite.sql';
 
 echo "الخطوة 1: إنشاء قاعدة البيانات (SQLite)...\n";
 
+$dbDir = dirname($dbPath);
+if (!is_dir($dbDir)) {
+    mkdir($dbDir, 0755, true);
+}
+
 try {
-    if (file_exists($dbPath)) {
+    $isNew = !file_exists($dbPath) || filesize($dbPath) === 0;
+    if ($isNew && file_exists($dbPath)) {
         unlink($dbPath);
-        echo "  - تم حذف قاعدة البيانات القديمة\n";
     }
 
     $pdo = new PDO("sqlite:$dbPath");
@@ -32,16 +37,14 @@ try {
 
     echo "  ✓ تم إنشاء $count جدول وأمر\n";
     echo "  ✓ قاعدة البيانات جاهزة!\n\n";
-
     echo "بيانات الدخول للمدير:\n";
     echo "  البريد: admin@jewelry.com\n";
     echo "  كلمة المرور: password\n\n";
-
 } catch (Exception $e) {
     echo "✗ خطأ: " . $e->getMessage() . "\n";
     exit(1);
 }
 
-echo "لتشغيل الموقع:\n";
+echo "لتشغيل الموقع محلياً:\n";
 echo "  php -S localhost:8000 -t \"" . __DIR__ . "\"\n";
 echo "  ثم افتح المتصفح على: http://localhost:8000\n\n";

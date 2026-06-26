@@ -46,8 +46,8 @@ function formatPrice($price) {
 }
 
 function getProductImage($image) {
-    if ($image && file_exists("uploads/products/$image")) {
-        return "uploads/products/$image";
+    if ($image && file_exists(__DIR__ . '/../uploads/products/' . $image)) {
+        return 'uploads/products/' . $image;
     }
     return 'https://placehold.co/600x600/1a1a2e/FFD700?text=Jewelry';
 }
